@@ -1,46 +1,894 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Finance Tracker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Finance Dashboard</title>
+
+  <!-- Bootstrap CSS v5.3 -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+    rel="stylesheet"
+  />
+  <!-- Bootstrap Icons for visual cues -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand ms-3" href="#">My Finances</a>
-  </nav>
+<body class="light-mode">
 
-  <div class="container my-4">
-    <h1>Dashboard</h1>
-    <div class="row g-3 mt-3">
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Total Income</h5>
-          <p class="display-6">₹ 0.00</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Total Expense</h5>
-          <p class="display-6">₹ 0.00</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3 text-center">
-          <h5>Balance</h5>
-          <p class="display-6">₹ 0.00</p>
-        </div>
-      </div>
-    </div>
+  <!-- ==============================================
+       DARK MODE TOGGLE (visual only; no JS functionality)
+       ============================================== -->
+  <div class="mode-switch">
+    <input type="checkbox" id="darkToggle" />
+    <label for="darkToggle"></label>
   </div>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-  </script>
-  <script src="js/app.js"></script>
+  <!-- ==============================================
+       NAVBAR / TOP NAV
+       ============================================== -->
+  <nav class="navbar navbar-expand-lg navbar-light px-4 py-3">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <i class="bi bi-wallet2 me-2 fs-3"></i>
+      <span class="brand-text">Fintrack Pro</span>
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item mx-2">
+          <a class="nav-link active" href="#dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#transactions">Transactions</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#budgeting">Budgeting</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#networth">Net Worth</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#goals">Goals</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#reports">Reports</a>
+        </li>
+        <li class="nav-item mx-2">
+          <a class="nav-link" href="#settings">Settings</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ==============================================
+       MAIN CONTAINER
+       ============================================== -->
+  <div class="container py-5">
+    <!-- ========== DASHBOARD SECTION ========== -->
+    <section id="dashboard" class="mb-5">
+      <h1 class="section-title text-center">Dashboard</h1>
+      <div class="row g-4 mt-4">
+        <!-- Total Income Card -->
+        <div class="col-md-4">
+          <div class="card summary-card text-center">
+            <div class="card-body">
+              <i class="bi bi-arrow-down-circle-fill text-success fs-2 mb-2"></i>
+              <h5 class="card-title">Total Income</h5>
+              <p id="income-amount" class="card-value">₹ 0.00</p>
+            </div>
+          </div>
+        </div>
+        <!-- Total Expense Card -->
+        <div class="col-md-4">
+          <div class="card summary-card text-center">
+            <div class="card-body">
+              <i class="bi bi-arrow-up-circle-fill text-danger fs-2 mb-2"></i>
+              <h5 class="card-title">Total Expense</h5>
+              <p id="expense-amount" class="card-value">₹ 0.00</p>
+            </div>
+          </div>
+        </div>
+        <!-- Balance Card -->
+        <div class="col-md-4">
+          <div class="card summary-card text-center">
+            <div class="card-body">
+              <i class="bi bi-calculator-fill fs-2 mb-2"></i>
+              <h5 class="card-title">Balance</h5>
+              <p id="balance-amount" class="card-value">₹ 0.00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TRANSACTIONS SECTION ========== -->
+    <section id="transactions" class="mb-5">
+      <h2 class="section-title">Expense & Income Tracking</h2>
+      <div class="row g-4 mt-3">
+        <!-- Add Transaction Form -->
+        <div class="col-lg-6">
+          <div class="card p-4 form-card">
+            <h5 class="form-heading">
+              <i class="bi bi-plus-circle me-2"></i>
+              Add New Transaction
+            </h5>
+            <form id="txn-form">
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <label for="txn-date" class="form-label">Date</label>
+                  <input type="date" id="txn-date" class="form-control" required />
+                </div>
+                <div class="col-sm-6">
+                  <label for="txn-type" class="form-label">Type</label>
+                  <select id="txn-type" class="form-select" required>
+                    <option value="" disabled selected>Choose Type</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="txn-desc" class="form-label">Description</label>
+                  <input
+                    type="text"
+                    id="txn-desc"
+                    class="form-control"
+                    placeholder="e.g. Salary, Groceries"
+                    required
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <label for="txn-amount" class="form-label">Amount (₹)</label>
+                  <input
+                    type="number"
+                    id="txn-amount"
+                    class="form-control"
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <label for="txn-category" class="form-label">Category</label>
+                  <select id="txn-category" class="form-select" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="groceries">Groceries</option>
+                    <option value="rent">Rent</option>
+                    <option value="salary">Salary</option>
+                    <option value="investment">Investment</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="txn-notes" class="form-label">Notes / Tags</label>
+                  <input
+                    type="text"
+                    id="txn-notes"
+                    class="form-control"
+                    placeholder="Optional: e.g. ‘Monthly rent’, ‘Uber ride’"
+                  />
+                </div>
+                <div class="col-12 text-end">
+                  <button type="submit" class="btn add-btn">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Add Transaction
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Transaction List -->
+        <div class="col-lg-6">
+          <div class="card p-4 form-card">
+            <h5 class="form-heading">
+              <i class="bi bi-list-ul me-2"></i>
+              Recent Transactions
+            </h5>
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                  <tr class="text-center">
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount (₹)</th>
+                    <th>Type</th>
+                    <th>Tags</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Example static row -->
+                  <tr>
+                    <td>2025-05-20</td>
+                    <td>Salary</td>
+                    <td>Salary</td>
+                    <td class="text-success">₹ 50,000.00</td>
+                    <td>Income</td>
+                    <td>Monthly</td>
+                    <td class="text-center">
+                      <button class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2025-05-19</td>
+                    <td>Supermarket</td>
+                    <td>Groceries</td>
+                    <td class="text-danger">₹ 1,200.00</td>
+                    <td>Expense</td>
+                    <td>Weekly</td>
+                    <td class="text-center">
+                      <button class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Further rows go here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== BUDGETING SECTION ========== -->
+    <section id="budgeting" class="mb-5">
+      <h2 class="section-title">Budgeting Tools</h2>
+      <div class="row g-4 mt-3">
+        <!-- Monthly Budget Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>
+                Category Budgets
+              </h5>
+              <p class="feature-text">
+                Set monthly limits for each category and track progress.
+              </p>
+              <div class="budget-item">
+                <div class="d-flex justify-content-between">
+                  <span>Groceries</span>
+                  <span>₹ 5,000</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    style="width: 45%;"
+                    aria-valuenow="45"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+                <small class="text-muted">45% used</small>
+              </div>
+              <div class="budget-item mt-3">
+                <div class="d-flex justify-content-between">
+                  <span>Entertainment</span>
+                  <span>₹ 2,000</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-warning"
+                    role="progressbar"
+                    style="width: 60%;"
+                    aria-valuenow="60"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+                <small class="text-muted">60% used</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recurring Subscriptions Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-repeat text-info me-2"></i>
+                Recurring Transactions
+              </h5>
+              <p class="feature-text">
+                Automate monthly bills and subscriptions.
+              </p>
+              <ul class="list-unstyled">
+                <li class="d-flex justify-content-between align-items-center my-2">
+                  <span><i class="bi bi-tv-fill me-2"></i>Netflix</span>
+                  <span class="text-danger">₹ 799</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center my-2">
+                  <span><i class="bi bi-hdd-network-fill me-2"></i>Internet</span>
+                  <span class="text-danger">₹ 600</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center my-2">
+                  <span><i class="bi bi-phone-fill me-2"></i>Mobile Plan</span>
+                  <span class="text-danger">₹ 499</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cash & Receipts Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-receipt-cutoff text-warning me-2"></i>
+                Cash & Receipts
+              </h5>
+              <p class="feature-text">
+                Track cash expenses and upload receipts.
+              </p>
+              <button class="btn btn-outline-primary btn-sm mt-3">
+                <i class="bi bi-upload me-1"></i> Upload Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== INCOME SECTION ========== -->
+    <section id="income" class="mb-5">
+      <h2 class="section-title">Income Tracking</h2>
+      <div class="row g-4 mt-3">
+        <!-- Income Sources Card -->
+        <div class="col-md-6">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-briefcase-fill text-success me-2"></i>
+                Income Sources
+              </h5>
+              <p class="feature-text">Log multiple income streams (salary, freelancing, investments).</p>
+              <ul class="list-group mt-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Salary
+                  <span class="badge bg-success rounded-pill">₹ 45,000</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Freelancing
+                  <span class="badge bg-success rounded-pill">₹ 12,000</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Dividends
+                  <span class="badge bg-success rounded-pill">₹ 3,500</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recurring Income Card -->
+        <div class="col-md-6">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-cash-stack text-info me-2"></i>
+                Recurring Income
+              </h5>
+              <p class="feature-text">Automatically log regular paychecks or dividends.</p>
+              <ul class="list-unstyled">
+                <li class="d-flex justify-content-between align-items-center my-2">
+                  <span><i class="bi bi-building me-2"></i>Company Pay</span>
+                  <span class="text-success">₹ 45,000 / mo</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center my-2">
+                  <span><i class="bi bi-bar-chart-fill me-2"></i>Investment</span>
+                  <span class="text-success">₹ 3,500 / mo</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== NET WORTH SECTION ========== -->
+    <section id="networth" class="mb-5">
+      <h2 class="section-title">Net Worth</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-md-8">
+          <div class="card feature-card text-center">
+            <div class="card-body">
+              <i class="bi bi-stack text-primary fs-1 mb-3"></i>
+              <h5 class="feature-title mb-3">Assets vs. Liabilities</h5>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <p class="mb-1 text-muted">Total Assets</p>
+                  <h4 class="text-success">₹ 3,20,000</h4>
+                </div>
+                <div class="col-6">
+                  <p class="mb-1 text-muted">Total Liabilities</p>
+                  <h4 class="text-danger">₹ 1,10,000</h4>
+                </div>
+              </div>
+              <hr />
+              <h3>Your Net Worth: <span class="text-primary">₹ 2,10,000</span></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FINANCIAL GOALS SECTION ========== -->
+    <section id="goals" class="mb-5">
+      <h2 class="section-title">Financial Goals</h2>
+      <div class="row g-4 mt-3">
+        <!-- Emergency Fund Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-shield-lock-fill text-warning me-2"></i>
+                Emergency Fund
+              </h5>
+              <p class="feature-text">Target: ₹ 50,000</p>
+              <div class="progress mb-2">
+                <div
+                  class="progress-bar bg-warning"
+                  role="progressbar"
+                  style="width: 40%;"
+                  aria-valuenow="40"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <small class="text-muted">₹ 20,000 saved (40%)</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vacation Fund Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-suitcase-fill text-secondary me-2"></i>
+                Vacation Fund
+              </h5>
+              <p class="feature-text">Target: ₹ 30,000</p>
+              <div class="progress mb-2">
+                <div
+                  class="progress-bar bg-info"
+                  role="progressbar"
+                  style="width: 80%;"
+                  aria-valuenow="80"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <small class="text-muted">₹ 24,000 saved (80%)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== REPORTS & ANALYTICS SECTION ========== -->
+    <section id="reports" class="mb-5">
+      <h2 class="section-title">Reports & Analytics</h2>
+      <div class="row g-4 mt-3">
+        <!-- Spending Trend (Placeholder for Chart) -->
+        <div class="col-lg-6">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-graph-up text-success me-2"></i>
+                Spending Trends
+              </h5>
+              <div class="chart-placeholder d-flex align-items-center justify-content-center">
+                <span class="text-muted">[Line Chart Goes Here]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Category Breakdown (Placeholder) -->
+        <div class="col-lg-6">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-pie-chart-fill text-primary me-2"></i>
+                Category Breakdown
+              </h5>
+              <div class="chart-placeholder d-flex align-items-center justify-content-center">
+                <span class="text-muted">[Pie Chart Goes Here]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Custom Filters (static UI) -->
+      <div class="card mt-4 p-4 feature-card">
+        <h5 class="feature-title mb-3">
+          <i class="bi bi-funnel-fill text-secondary me-2"></i>
+          Filters & Date Range
+        </h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">From</label>
+            <input type="date" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">To</label>
+            <input type="date" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Category</label>
+            <select class="form-select">
+              <option value="" disabled selected>Select Category</option>
+              <option>Groceries</option>
+              <option>Rent</option>
+              <option>Entertainment</option>
+              <option>Utilities</option>
+              <option>Salary</option>
+              <option>Investment</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DEBT MANAGEMENT SECTION ========== -->
+    <section id="debt" class="mb-5">
+      <h2 class="section-title">Debt Management</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-lg-10">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-coin text-danger me-2"></i>
+                Outstanding Debts
+              </h5>
+              <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                  <thead class="table-light">
+                    <tr class="text-center">
+                      <th>Lender</th>
+                      <th>Balance (₹)</th>
+                      <th>Interest Rate</th>
+                      <th>Due Date</th>
+                      <th>Payoff Strategy</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Home Loan</td>
+                      <td class="text-danger">₹ 80,000</td>
+                      <td>7.5% p.a.</td>
+                      <td>2025-12-01</td>
+                      <td>Snowball</td>
+                    </tr>
+                    <tr>
+                      <td>Car Loan</td>
+                      <td class="text-danger">₹ 25,000</td>
+                      <td>9% p.a.</td>
+                      <td>2026-05-15</td>
+                      <td>Avalanche</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== INVESTMENT TRACKING SECTION ========== -->
+    <section id="investments" class="mb-5">
+      <h2 class="section-title">Investment Tracking</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-lg-10">
+          <div class="card feature-card">
+            <div class="card-body">
+              <h5 class="feature-title">
+                <i class="bi bi-bank2 text-success me-2"></i>
+                Portfolio Overview
+              </h5>
+              <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                  <thead class="table-light">
+                    <tr class="text-center">
+                      <th>Asset</th>
+                      <th>Quantity</th>
+                      <th>Current Value (₹)</th>
+                      <th>Allocation (%)</th>
+                      <th>Performance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Stocks</td>
+                      <td>100</td>
+                      <td class="text-success">₹ 120,000</td>
+                      <td>60%</td>
+                      <td class="text-success">+12%</td>
+                    </tr>
+                    <tr>
+                      <td>Mutual Funds</td>
+                      <td>50</td>
+                      <td class="text-success">₹ 50,000</td>
+                      <td>25%</td>
+                      <td class="text-success">+8%</td>
+                    </tr>
+                    <tr>
+                      <td>Gold</td>
+                      <td>10 grams</td>
+                      <td class="text-success">₹ 30,000</td>
+                      <td>15%</td>
+                      <td class="text-danger">-2%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== BILL REMINDERS & ALERTS SECTION ========== -->
+    <section id="bills" class="mb-5">
+      <h2 class="section-title">Bill Reminders & Alerts</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-lg-8">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title mb-3">
+              <i class="bi bi-bell-fill text-danger me-2"></i>
+              Upcoming Bills
+            </h5>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Electricity – ₹ 2,500
+                <span class="badge bg-warning rounded-pill">Due: 2025-06-05</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Credit Card – ₹ 4,500
+                <span class="badge bg-warning rounded-pill">Due: 2025-06-10</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Insurance – ₹ 1,200
+                <span class="badge bg-warning rounded-pill">Due: 2025-06-15</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== MULTI-CURRENCY SUPPORT SECTION ========== -->
+    <section id="currency" class="mb-5">
+      <h2 class="section-title">Multi-Currency Support</h2>
+      <div class="row justify-content-center mt-3">
+        <div class="col-md-6">
+          <div class="card feature-card text-center p-4">
+            <i class="bi bi-currency-exchange text-primary fs-1 mb-3"></i>
+            <h5 class="feature-title mb-3">Convert Currency</h5>
+            <div class="row g-3">
+              <div class="col-6">
+                <select class="form-select">
+                  <option value="" disabled selected>From</option>
+                  <option value="INR">INR</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <select class="form-select">
+                  <option value="" disabled selected>To</option>
+                  <option value="USD">USD</option>
+                  <option value="INR">INR</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Amount"
+                />
+              </div>
+              <div class="col-12 text-center">
+                <button class="btn btn-outline-primary">Convert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SECURITY & BACKUP SECTION ========== -->
+    <section id="settings" class="mb-5">
+      <h2 class="section-title">Security & Backup</h2>
+      <div class="row g-4 mt-3">
+        <!-- Encryption & 2FA Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-lock-fill text-danger me-2"></i>
+              Encryption & 2FA
+            </h5>
+            <p class="feature-text">
+              All data is encrypted in transit and at rest. Enable Two-Factor Authentication for added security.
+            </p>
+            <button class="btn btn-outline-danger btn-sm mt-2">
+              <i class="bi bi-shield-lock me-1"></i>Enable 2FA
+            </button>
+          </div>
+        </div>
+
+        <!-- Cloud Sync & Backup Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>
+              Cloud Sync & Backup
+            </h5>
+            <p class="feature-text">
+              Automatically back up your data to the cloud. Access across all devices.
+            </p>
+            <button class="btn btn-outline-primary btn-sm mt-2">
+              <i class="bi bi-cloud-upload me-1"></i>Sync Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Search & Filters Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-search text-secondary me-2"></i>
+              Quick Search & Filters
+            </h5>
+            <p class="feature-text">Instantly locate transactions with powerful filters.</p>
+            <button class="btn btn-outline-secondary btn-sm mt-2">
+              <i class="bi bi-funnel-fill me-1"></i>Open Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DATA MANAGEMENT & TAX SECTION ========== -->
+    <section id="data-tax" class="mb-5">
+      <h2 class="section-title">Data Management & Tax Prep</h2>
+      <div class="row g-4 mt-3">
+        <!-- Import/Export Card -->
+        <div class="col-md-6">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-file-earmark-arrow-up-fill text-success me-2"></i>
+              Import / Export Data
+            </h5>
+            <p class="feature-text">Download CSV/Excel or upload statements for easy tax filing.</p>
+            <div class="d-flex gap-2 flex-wrap mt-3">
+              <button class="btn btn-outline-success btn-sm">
+                <i class="bi bi-file-earmark-spreadsheet me-1"></i>Export CSV
+              </button>
+              <button class="btn btn-outline-success btn-sm">
+                <i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Import CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deduction Tracking Card -->
+        <div class="col-md-6">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-tags-fill text-warning me-2"></i>
+              Tax Deduction Tracking
+            </h5>
+            <p class="feature-text">Flag and categorize tax-deductible expenses for seamless filing.</p>
+            <button class="btn btn-outline-warning btn-sm mt-2">
+              <i class="bi bi-bookmarks-fill me-1"></i>View Deductibles
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== COLLABORATION & ADDITIONAL FEATURES SECTION ========== -->
+    <section id="collab-add" class="mb-5">
+      <h2 class="section-title">Collaboration & Extras</h2>
+      <div class="row g-4 mt-3">
+        <!-- Shared Access Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-people-fill text-success me-2"></i>
+              Shared Access
+            </h5>
+            <p class="feature-text">Invite family or partner to jointly manage finances.</p>
+            <button class="btn btn-outline-success btn-sm mt-2">
+              <i class="bi bi-person-plus-fill me-1"></i>Invite User
+            </button>
+          </div>
+        </div>
+
+        <!-- Loan Calculator Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-calculator-fill text-primary me-2"></i>
+              Loan Calculator
+            </h5>
+            <p class="feature-text">Estimate monthly repayments for new loans.</p>
+            <div class="row g-2 mt-2">
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="Loan Amount"
+                />
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="Interest (%)"
+                />
+              </div>
+              <div class="col-6">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  placeholder="Years"
+                />
+              </div>
+              <div class="col-6">
+                <button class="btn btn-outline-primary btn-sm w-100">Calculate</button>
+              </div>
+            </div>
+            <small class="text-muted mt-2 d-block">[Result Placeholder]</small>
+          </div>
+        </div>
+
+        <!-- Calendar View Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="card feature-card p-4">
+            <h5 class="feature-title">
+              <i class="bi bi-calendar-event-fill text-warning me-2"></i>
+              Calendar View
+            </h5>
+            <p class="feature-text">Visualize transactions on a monthly calendar.</p>
+            <div class="calendar-placeholder d-flex align-items-center justify-content-center">
+              <span class="text-muted">[Calendar Here]</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Bootstrap JS (needed for responsive navbar toggler) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+

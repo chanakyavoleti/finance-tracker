@@ -1,0 +1,435 @@
+/* ==================== VARIABLES ==================== */
+:root {
+  --primary: #6a11cb;
+  --primary-light: #2575fc;
+  --secondary: #ff6a00;
+  --secondary-light: #ffb347;
+  --accent: #ee0979;
+  --background-light: #f3f4f6;
+  --background-dark: #0f172a;
+  --card-bg-light: #ffffff;
+  --card-bg-dark: #1e2937;
+  --text-light: #1f2937;
+  --text-dark: #f8fafc;
+  --text-muted: #6b7280;
+  --border-radius: 1rem;
+  --transition-fast: 0.3s ease-in-out;
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-heavy: rgba(0, 0, 0, 0.15);
+}
+
+/* ==================== GLOBAL RESET & BASE ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  line-height: 1.6;
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast);
+  min-height: 100vh;
+}
+
+body.dark-mode {
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Container maximum width */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  box-shadow: 0 4px 16px var(--shadow-light);
+}
+
+.brand-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  margin-left: 1rem;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ==================== DARK MODE TOGGLE (VISUAL) ==================== */
+.mode-switch {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+}
+
+.mode-switch input {
+  display: none;
+}
+
+.mode-switch label {
+  width: 52px;
+  height: 28px;
+  background: #cbd5e1;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.mode-switch label::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--transition-fast);
+}
+
+.mode-switch input:checked + label {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  box-shadow: 0 0 10px var(--primary);
+}
+
+.mode-switch input:checked + label::after {
+  transform: translateX(24px);
+}
+
+/* ==================== SECTION TITLES ==================== */
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  background: linear-gradient(to right, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ==================== SUMMARY CARDS (Dashboard) ==================== */
+.summary-card {
+  background-color: var(--card-bg-light);
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 6px 20px var(--shadow-light);
+  transition: transform var(--transition-fast),
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+body.dark-mode .summary-card {
+  background-color: var(--card-bg-dark);
+  box-shadow: 0 6px 20px var(--shadow-heavy);
+}
+
+.summary-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 34px var(--shadow-heavy);
+}
+
+.summary-card .card-body {
+  padding: 2rem;
+}
+
+.summary-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card .card-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+/* ==================== FEATURE CARDS ==================== */
+.feature-card {
+  background-color: var(--card-bg-light);
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 6px 20px var(--shadow-light);
+  transition: transform var(--transition-fast),
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+body.dark-mode .feature-card {
+  background-color: var(--card-bg-dark);
+  box-shadow: 0 6px 20px var(--shadow-heavy);
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 34px var(--shadow-heavy);
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 0.75rem;
+}
+
+.feature-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* ==================== FORMS ==================== */
+.form-card {
+  padding: 2rem;
+}
+
+.form-heading {
+  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  color: var(--secondary);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-heading::after {
+  content: '';
+  width: 50px;
+  height: 4px;
+  background-color: var(--secondary);
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+#txn-form .form-control,
+#txn-form .form-select {
+  border-radius: 0.75rem;
+  border: 1px solid #d1d5db;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+body.dark-mode #txn-form .form-control,
+body.dark-mode #txn-form .form-select {
+  background-color: #2d3748;
+  border-color: #4b5563;
+  color: var(--text-dark);
+}
+
+#txn-form .form-control:focus,
+#txn-form .form-select:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+#txn-form .form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.add-btn {
+  background: linear-gradient(to right, var(--secondary), var(--accent));
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+  box-shadow: 0 6px 20px rgba(255, 106, 0, 0.4);
+}
+
+.add-btn:hover {
+  background: linear-gradient(to right, var(--accent), var(--secondary));
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(238, 9, 121, 0.4);
+}
+
+/* ==================== TABLE STYLES ==================== */
+.table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.table thead {
+  background-color: var(--background-light);
+}
+
+body.dark-mode .table thead {
+  background-color: #334155;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+body.dark-mode .table th,
+body.dark-mode .table td {
+  color: var(--text-dark);
+}
+
+.table tbody tr {
+  background-color: var(--card-bg-light);
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+body.dark-mode .table tbody tr {
+  background-color: #1f2937;
+}
+
+.table tbody tr:hover {
+  background-color: var(--secondary-light);
+  color: #ffffff;
+}
+
+.table .btn {
+  font-size: 0.85rem;
+}
+
+/* ==================== BUDGET ITEMS ==================== */
+.budget-item {
+  margin-top: 1rem;
+}
+
+.budget-item .progress {
+  height: 8px;
+  border-radius: 0.5rem;
+}
+
+/* ==================== CHART & PLACEHOLDER STYLES ==================== */
+.chart-placeholder,
+.calendar-placeholder {
+  background-color: var(--background-light);
+  height: 180px;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+body.dark-mode .chart-placeholder,
+body.dark-mode .calendar-placeholder {
+  background-color: #334155;
+  color: var(--text-dark);
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.text-success {
+  color: #22c55e !important;
+}
+
+.text-danger {
+  color: #ef4444 !important;
+}
+
+.text-warning {
+  color: #f59e0b !important;
+}
+
+.text-info {
+  color: #2563eb !important;
+}
+
+.text-primary {
+  color: #3b82f6 !important;
+}
+
+.text-secondary {
+  color: #64748b !important;
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+@media (max-width: 992px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+  .summary-card .card-value {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  .form-card {
+    padding: 1.5rem;
+  }
+  .form-heading {
+    font-size: 1.5rem;
+  }
+  .feature-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
